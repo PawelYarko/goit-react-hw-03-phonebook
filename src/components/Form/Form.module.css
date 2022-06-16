@@ -1,0 +1,42 @@
+.form{
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    margin: 20px;
+}
+
+.name{
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+    font-size: 20px;
+}
+
+.inputName{
+    width: 200px;
+    height: 30px;
+    margin-top: 10px;
+
+}
+
+.inputNumber{
+    width: 200px;
+    height: 30px;
+    margin-top: 10px;
+
+}
+
+.number{
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+    font-size: 20px;
+}
+
+.button{
+    width: 150px;
+    height: 30px;
+    margin: 20px;
+}
+
