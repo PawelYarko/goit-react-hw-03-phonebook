@@ -5,53 +5,49 @@ import Filter from '../Filter/Filter';
 import { nanoid } from 'nanoid';
 import s from './App.module.css';
 
-
-export default class App extends React.Component{
+export default class App extends React.Component {
   state = {
     contacts: [],
     filter: '',
+  };
+
+  componentDidUpdate(pervProps, pervState) {
+    if (this.state.contacts !== pervState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
   }
 
-  componentDidUpdate(pervProps, pervState){
-    if(this.state.contacts !== pervState.contacts){
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
-    }
-  }  
-
-  componentDidMount(){
+  componentDidMount() {
     const contacts = localStorage.getItem('contacts');
     const parsedContacts = JSON.parse(contacts);
 
-    if(parsedContacts){
-      this.setState({contacts : parsedContacts});
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
     }
-
   }
 
-
-  formSubmitHandler = ({name,number}) =>{
+  formSubmitHandler = ({ name, number }) => {
     const formValue = {
       id: nanoid(),
-      name, 
-      number};  
+      name,
+      number,
+    };
 
-      this.state.contacts.map(a => {
-        if(a.name.includes(name)){
-          window.alert(`${name} is already in contacts`)
-        }
-      }) 
+    this.state.contacts.find(a => {
+      if (a.name.includes(name)) {
+        window.alert(`${name} is already in contacts`);
+      }
+    });
 
-      this.setState(({contacts}) =>({
-      contacts:[formValue, ...contacts]
-      }))
-    
-  }
+    this.setState(({ contacts }) => ({
+      contacts: [formValue, ...contacts],
+    }));
+  };
 
-  onFilterChange = e =>{
+  onFilterChange = e => {
     const { value } = e.currentTarget;
-    this.setState({filter: value});
-  }
-
+    this.setState({ filter: value });
+  };
 
   handleDeleteContact(id) {
     const index = this.state.contacts.findIndex(contact => contact.id === id);
@@ -59,25 +55,29 @@ export default class App extends React.Component{
     if (index === -1) return;
     this.state.contacts.splice(index, 1);
 
-    this.setState(this.state); 
+    this.setState(this.state);
   }
 
-  
-  render(){
-    const {filter, contacts} = this.state;
+  render() {
+    const { filter, contacts } = this.state;
     const normalizedFilter = filter.toLowerCase();
-    const visibleContacts = contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter),);
+    const visibleContacts = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
 
     return (
       <div className={s.container}>
         <h1>Phonebook</h1>
-          <Form formData={this.formSubmitHandler}/> 
+        <Form formData={this.formSubmitHandler} />
         <div>
           <h2>Contacts</h2>
-            <Filter value={filter} onFilterChange={this.onFilterChange}/>
-            <ContactsList contacts={visibleContacts} onDeleteContact={this.handleDeleteContact.bind(this)}/>   
+          <Filter value={filter} onFilterChange={this.onFilterChange} />
+          <ContactsList
+            contacts={visibleContacts}
+            onDeleteContact={this.handleDeleteContact(this)}
+          />
         </div>
       </div>
-    )
+    );
   }
 }
