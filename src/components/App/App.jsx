@@ -33,15 +33,18 @@ export default class App extends React.Component {
       number,
     };
 
-    this.state.contacts.find(a => {
-      if (a.name.includes(name)) {
-        window.alert(`${name} is already in contacts`);
-      }
-    });
-
-    this.setState(({ contacts }) => ({
-      contacts: [formValue, ...contacts],
-    }));
+    if (this.state.contacts.find(contact => contact.name === name)) {
+      console.log('sovpadenie');
+      window.alert(`${name} is already in contacts`);
+      return;
+    } else if (
+      [] ??
+      this.state.contacts.find(contact => contact.name !== name)
+    ) {
+      this.setState(({ contacts }) => ({
+        contacts: [formValue, ...contacts],
+      }));
+    }
   };
 
   onFilterChange = e => {
@@ -74,7 +77,7 @@ export default class App extends React.Component {
           <Filter value={filter} onFilterChange={this.onFilterChange} />
           <ContactsList
             contacts={visibleContacts}
-            onDeleteContact={this.handleDeleteContact(this)}
+            onDeleteContact={this.handleDeleteContact.bind(this)}
           />
         </div>
       </div>
